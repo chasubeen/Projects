@@ -11,22 +11,34 @@
 - 특징을 추출하는 필터(Filter) 사용
 - 필터의 값을 비선형 값으로 바꿔주는 활성화 함수(activation function)을 사용
   - torch.nn.ReLU
-    - 수정된 선형 단위 함수를 요소별로 적용(선형 -> 비선형)
+    - 비선형 활성화(activation)는 모델의 입력과 출력 사이에 복잡한 관계(mapping)를 생성
+    - 선형 변환 후에 적용 -> 비선형성(nonlinearity) 도입, 신경망이 다양한 현상을 학습할 수 있도록 함
     - 코드
     ```Python
     torch.nn.ReLU(inplace = False)
     ```
     - 입력: (*), 여기서 *는 임의의 차원 수
     - 출력: (*), 입력과 동일한 차원
-   
+  - torch.nn.Softmax
+    - n차원 출력 텐서의 요소가 [0,1] 범위에 있고 합이 1이 되도록 n차원 입력 텐서에 softmax 함수를 적용
+    - 세 개 이상으로 분류하는 다중 클래스 분류에서 사용되는 활성화 함수
+    - 분류될 클래스가 n개라 할 때, n차원의 벡터를 입력받아 각 클래스에 속할 확률을 추정
+  - torch.nn.Sigmoid
+    - S자형 곡선 또는 시그모이드 곡선을 갖는 수학 함수
+    - 반환값은 단조증가하는 것이 일반적이지만 단조감소할 수도 있음
+    - 반환값(y축)은 흔히 0에서 1까지의 범위를 가짐, 또는 -1부터 1까지의 범위를 가지기도 함
+    - 코드
+    ```Python
+    torch.nn.Sigmoid()
+    ```
 - torch.nn.Conv2d
   - 입력의 너비와 높이 방향의 합성곱 연산을 구현한 Layer
   - 여러 개의 입력 평면으로 구성된 입력 신호에 2D 컨볼루션을 적용
-- 코드
-```Python
-torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, 
-                groups=1, bias=True, padding_mode='zeros', device=None, dtype=None)
-```
+  - 코드
+  ```Python
+  torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, 
+                  groups=1, bias=True, padding_mode='zeros', device=None, dtype=None)
+  ```
 
 ### **2-1. 필터(Filter)**
 - 특징이 데이터에 있는지 검출하는 함수
@@ -80,28 +92,54 @@ torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride=1, padding=0, dil
 ### **2-6. FC Layer(Fully Connected Layer)**
 - 기존의 뉴럴 네트워크
 
-### **2-7. Dropout Layer**
+### **2-7. Flatten Layer**
+- 연속된 범위의 차원을 텐서로 평평하게 만듦(다차원 -> 1차원)
+- torch.nn.Flatten
+  - 코드
+  ```Python
+  torch.nn.Flatten(start_dim=1, end_dim=- 1)
+  ```
+  - Parameters>
+    - start_dim(int): 평평하게 할 첫 번째 차원(default = 1)
+    - end_dim(int): 평평하게 할 마지막 차원(default = -1)
+    
+### **2-8. Linear Layer**
+- 저장된 가중치(weight)와 편향(bias)을 사용하여 입력에 선형 변환(linear transformation)을 적용하는 모듈
+- torch.nn.Linear
+  - 들어오는 데이터에 선형 변환을 적용: y = xA^T + b
+  - 코드
+  ```Python
+  torch.nn.Linear(in_features, out_features, bias=True, device=None, dtype=None)
+  ```
+
+### **2-9. Dropout Layer**
 - overfitting을 막기 위한 layer
 - NN이 학습중일 때 랜덤하게 값을 발생하여 학습을 방해  
   => 학습용 데이터에 결과가 치우치는 것 방지
- 
- # **3. 모델 구현**
- - tensorflow의 경우 Sequential 모델로 layer를 쌓는 방식을 주로 활용
- ```Python
- # 3개의 층을 가진 Sequential Model 정의하기
-model = keras.Sequential(
-    [
-        # Dense Layer: 일반 layer
-        layers.Dense(2,activation = "relu",name = "layer1")
-        layers.Dense(3,activation = "relu",name = "layer2")
-        layers.Dense(4, name = "layer3")
-    ]
-)
+- torch.nn.Dropout
+  - 훈련 중, 베르누이 분포의 샘플을 사용하여 확률 p로 입력 텐서의 일부 요소를 무작위로 0으로 만듦
+  - 코드
+  ```Python
+  torch.nn.Dropout(p=0.5, inplace=False)
+  ```
+  - Parameters>
+    - p (float): 원소가 0이 될 확률, default: 0.5
 
-# 테스트용 입력에서 모델 호출
-X = tf.ones((3,3))
-y = model(X)
- ```
+# **3. 모델 구현**
+- Sequential 모델로 layer를 쌓는 방식을 주로 활용
+- torch.nn.Sequential
+  - 순서를 갖는 모듈의 컨테이너
+  - 데이터는 정의된 것과 같은 순서로 모든 모듈들을 통해 전달됨
+  - 코드
+  ```Python
+  model = nn.Sequential(
+          nn.Conv2d(1,20,5),
+          nn.ReLU(),
+          nn.Conv2d(20,64,5),
+          nn.ReLU()
+        )
+  ```
+ 
 ### **3-1. Early Stopping**
 - Epoch를 일단 많이 돌게 한 후 특정 시점에서 멈추도록 하는 기능
 - Parameters>
