@@ -19,6 +19,7 @@
     ```
     - 입력: (*), 여기서 *는 임의의 차원 수
     - 출력: (*), 입력과 동일한 차원
+    
   - torch.nn.Softmax
     - n차원 출력 텐서의 요소가 [0,1] 범위에 있고 합이 1이 되도록 n차원 입력 텐서에 softmax 함수를 적용
     - 세 개 이상으로 분류하는 다중 클래스 분류에서 사용되는 활성화 함수
@@ -27,6 +28,7 @@
     ```Python
     torch.nn.Softmax(dim = 1) # 결과가 1개로 출력된다.
     ```
+  
   - torch.nn.Sigmoid
     - S자형 곡선 또는 시그모이드 곡선을 갖는 수학 함수
     - 반환값은 단조증가하는 것이 일반적이지만 단조감소할 수도 있음
@@ -35,6 +37,7 @@
     ```Python
     torch.nn.Sigmoid()
     ```
+
 - torch.nn.Conv2d
   - 입력의 너비와 높이 방향의 합성곱 연산을 구현한 Layer
   - 여러 개의 입력 평면으로 구성된 입력 신호에 2D 컨볼루션을 적용
@@ -130,9 +133,48 @@
     - p (float): 원소가 0이 될 확률, default: 0.5
 
 # **3. 손실 함수(Loss Function)**
-- 
+- 지도학습(Supervised Learning) 시 알고리즘이 예측한 값과 실제 정답의 차이를 비교하기 위한 함수
+  - 어떤 문제에서 머신러닝 알고리즘이 얼마나 잘못되었는지를 측정하는 기준
+  - 작을수록 good
+- 비용 함수(Cost Function) vs 손실 함수(Loss Function)  
+  - 손실 함수: 샘플 하나에 대한 손실을 정의  
+  - 비용 함수: 훈련 세트에 있는 모든 샘플에 대한 손실 함수의 합  
+  ※ 사실 둘을 딱히 구분해서 사용하지는 x
+- nn.CrossEntropyLoss
+  -  입력 logit과 target 사이의 교차 엔트로피 손실을 계산
+  -  k개 클래스의 분류 문제를 훈련시킬 때 유용
+  -  추가적인 증강 가중치는 1차원 tensor여야 함
+  -  불균형한 훈련 세트에 특히 유용함
+  - 코드
+  ```Python
+  torch.nn.CrossEntropyLoss(weight=None, size_average=None, ignore_index=- 100, reduce=None, 
+                            reduction='mean', label_smoothing=0.0)
+  ```
+  
+# **4. 옵티마이져(Optimizer)**
+- 비용 함수의 값을 최소로 하는 W(기울기)와 b(절편)을 찾는 방법(알고리즘)
 
-# **4. 모델 구현**
+### **4-1.경사 하강법(Gradient Descent)**
+- 가장 기본적안 옵티마이져 알고리즘
+- cost가 최소화되는 지점: 접선의 기울기가 0이 되는 지점(= 미분값이 0이 되는 지점)
+- 비용 함수를 미분하여 현재 w에서의 접선의 기울기를 구하고, 접선의 기울기가 낮은 방향으로 w의 값을 업데이트하는 작업 반복
+
+### **4-2. SGD(Stochastic Gradient Descent)**
+- 배치 크기가 1인 경사 하강법 알고리즘
+- 확률적 경사 하강법
+- 데이터 셋에서 무작위로 균일하게 선택한 하나의 예에 의존하여 각 단계의 예측 경사 계산
+- 코드
+```Python
+optimizer = torch.optim.SGD(model.parameters(), lr = 0.01, momentum = 0.9)
+```
+
+### **4-3. 학습율(learning rate)**
+- 기울기 값 변경 시 얼마나 크게 변경할 지 결정
+
+# **5. 에폭(Epoch)**
+- 전체 훈련 데이터가 학습에 한 번 사용되는 주기
+
+# **6. 모델 구현**
 - Sequential 모델로 layer를 쌓는 방식을 주로 활용
 - torch.nn.Sequential
   - 순서를 갖는 모듈의 컨테이너
@@ -147,7 +189,7 @@
         )
   ```
  
-### **3-1. Early Stopping**
+### **6-1. Early Stopping**
 - Epoch를 일단 많이 돌게 한 후 특정 시점에서 멈추도록 하는 기능
 - Parameters>
   - monitor: Early Stopping의 기준이 되는 값 ex> 'val_loss'로 설정 시 더 이상 val_loss가 감소하지 않으면 중단
@@ -163,7 +205,7 @@ early_stopping = tf.keras.callbacks.EarlyStopping(
 )
 ```
 
-### **3-2. ReduceLROnPlateau**
+### **6-2. ReduceLROnPlateau**
 - 모델의 개선이 없을 경우 learning rate를 조절해 모델의 개선 유도
 - Parameters>
   - monitor: ReduceLROnPlateau의 기준이 되는 값
@@ -176,7 +218,7 @@ reduce_on_plateau = tf.keras.callbacks.ReduceLROnPlateau(
 )
 ```
 
-### **3-3. ModelCheckPoint**
+### **6-3. ModelCheckPoint**
 - 모델의 경로 설정
 - 모델 경로를 '{epoch:02d} - {val_loss:.2f}.hdf5'라고 하면 앞의 명시한 문자열로 파일이 저장됨
   ex> 01-0.12f.h5
@@ -195,15 +237,3 @@ model_checkpoint = tf.keras.callbacks.ModelCheckPoint(
     filepath,monitor = 'val_loss',save_best_only = True, save_weights_only = False, mode = 'min'
 )
 ```
-
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
