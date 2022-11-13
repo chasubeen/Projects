@@ -125,7 +125,10 @@
   - Parameters>
     - p (float): 원소가 0이 될 확률, default: 0.5
 
-# **3. 모델 구현**
+# **3. 손실 함수(Loss Function)**
+- 
+
+# **4. 모델 구현**
 - Sequential 모델로 layer를 쌓는 방식을 주로 활용
 - torch.nn.Sequential
   - 순서를 갖는 모듈의 컨테이너
