@@ -150,16 +150,25 @@
   torch.nn.CrossEntropyLoss(weight=None, size_average=None, ignore_index=- 100, reduce=None, 
                             reduction='mean', label_smoothing=0.0)
   ```
-  
-# **4. 옵티마이져(Optimizer)**
+# **4. 에폭(Epoch)**
+- 전체 훈련 데이터가 학습에 한 번 사용되는 주기 
+- 각 데이터를 모델에서 몇 번씩 복습할 것인지에 대한 횟수
+- 대체적으로 복습 횟수가 너무 적으면 데이터를 제대로 학습할 수 없고(underfit), 복습 횟수가 일정 횟수 이상이면 추가적인 성능 향상 효과가 거의 사라지게 됨
+
+# **5. 배치 사이즈(Batch Size)**
+- 여러 이미지에 대한 gradient를 모아서 평균을 낸 뒤, 역전파를 1회만 시켜줄 수 있는데, 이때 1회 역전파에서 gradient를 모을 데이터의 개수
+- 예를 들어, 전체 데이터의 개수가 1000개인 경우에 batch size = 100으로 설정한다면, 각 epoch에서는 1~100, 101~200, ... , 901~1000번 사진에 대한 gradient를 각각 모아
+총 10회의 역전파로 인한 모델 파라미터 업데이트
+
+# **6. 옵티마이져(Optimizer)**
 - 비용 함수의 값을 최소로 하는 W(기울기)와 b(절편)을 찾는 방법(알고리즘)
 
-### **4-1.경사 하강법(Gradient Descent)**
-- 가장 기본적안 옵티마이져 알고리즘
+### **6-1.경사 하강법(Gradient Descent)**
+- 가장 기본적인 옵티마이져 알고리즘
 - cost가 최소화되는 지점: 접선의 기울기가 0이 되는 지점(= 미분값이 0이 되는 지점)
 - 비용 함수를 미분하여 현재 w에서의 접선의 기울기를 구하고, 접선의 기울기가 낮은 방향으로 w의 값을 업데이트하는 작업 반복
 
-### **4-2. SGD(Stochastic Gradient Descent)**
+### **6-2. SGD(Stochastic Gradient Descent)**
 - 배치 크기가 1인 경사 하강법 알고리즘
 - 확률적 경사 하강법
 - 데이터 셋에서 무작위로 균일하게 선택한 하나의 예에 의존하여 각 단계의 예측 경사 계산
@@ -168,13 +177,10 @@
 optimizer = torch.optim.SGD(model.parameters(), lr = 0.01, momentum = 0.9)
 ```
 
-### **4-3. 학습율(learning rate)**
+### **6-3. 학습율(learning rate)**
 - 기울기 값 변경 시 얼마나 크게 변경할 지 결정
 
-# **5. 에폭(Epoch)**
-- 전체 훈련 데이터가 학습에 한 번 사용되는 주기
-
-# **6. 모델 구현**
+# **7. 모델 구현**
 - Sequential 모델로 layer를 쌓는 방식을 주로 활용
 - torch.nn.Sequential
   - 순서를 갖는 모듈의 컨테이너
@@ -189,7 +195,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr = 0.01, momentum = 0.9)
         )
   ```
  
-### **6-1. Early Stopping**
+### **7-1. Early Stopping**
 - Epoch를 일단 많이 돌게 한 후 특정 시점에서 멈추도록 하는 기능
 - Parameters>
   - monitor: Early Stopping의 기준이 되는 값 ex> 'val_loss'로 설정 시 더 이상 val_loss가 감소하지 않으면 중단
@@ -205,7 +211,7 @@ early_stopping = tf.keras.callbacks.EarlyStopping(
 )
 ```
 
-### **6-2. ReduceLROnPlateau**
+### **7-2. ReduceLROnPlateau**
 - 모델의 개선이 없을 경우 learning rate를 조절해 모델의 개선 유도
 - Parameters>
   - monitor: ReduceLROnPlateau의 기준이 되는 값
@@ -218,7 +224,7 @@ reduce_on_plateau = tf.keras.callbacks.ReduceLROnPlateau(
 )
 ```
 
-### **6-3. ModelCheckPoint**
+### **7-3. ModelCheckPoint**
 - 모델의 경로 설정
 - 모델 경로를 '{epoch:02d} - {val_loss:.2f}.hdf5'라고 하면 앞의 명시한 문자열로 파일이 저장됨
   ex> 01-0.12f.h5
