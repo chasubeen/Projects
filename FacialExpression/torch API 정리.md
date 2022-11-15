@@ -192,14 +192,17 @@
 
 ### **6-2.경사 하강법(Gradient Descent)**
 - 가장 기본적인 옵티마이져 알고리즘
+- 데이터셋 **전체**를 고려하여 손실 함수를 계산
+- 한 번의 Epoch에서 모든 파라미터에 대한 업데이트를 단 **한 번만** 수행
 - cost가 최소화되는 지점: 접선의 기울기가 0이 되는 지점(= 미분값이 0이 되는 지점)
-- 비용 함수를 미분하여 현재 w에서의 접선의 기울기를 구하고, 접선의 기울기가 낮은 방향으로 w의 값을 업데이트하는 작업 반복
+  - 비용 함수를 미분하여 현재 w에서의 접선의 기울기를 구하고, 접선의 기울기가 낮은 방향으로 w의 값을 업데이트하는 작업 반복
+- 모델 학습 시 많은 시간/메모리 소모의 단점 존재
 
 ### **6-3. SGD(Stochastic Gradient Descent)**
 - **확률적** 경사 하강법
 - 배치 크기가 1인 경사 하강법 알고리즘
   - 하나의 Training data마다 비용(손실)을 계산하고 바로 경사 하강법을 적용하여 가중치를 빠르게 update하는 방법
-  - 한 개의 Training data마다 매번 가중치를 갱신 -> 신경망의 성능이 들쑥날쑥 변함(Cost 값이 안정적으로 줄어들지 x)
+  - 한 개의 Training data마다 매번 가중치를 갱신 -> 신경망의 성능이 들쑥날쑥 변함(Cost 값이 안정적으로 줄어들지 x) => 정확도가 낮은 경우가 생기기도 함
 - 데이터 셋에서 무작위로 균일하게 선택한 하나의 예에 의존하여 각 단계의 예측 경사 계산
 - 코드
 ```Python
@@ -207,9 +210,40 @@ optimizer = torch.optim.SGD(model.parameters(), lr = 0.01, momentum = 0.9)
 ```
 
 ### **6-4. 미니배치 경사 하강법(Mini-Batch Gradient Descent)**
-- 
+- 배치 사이즈를 주로 32, 64, 128 등과 같이 2^n에 해당하는 값으로 설정하고 경사 하강법 적용
+  - DataLoader 객체 생성 시 batch_size를 설정
+- 빠른 학습 속도, SGD보다 더 안정적인 알고리즘
 
+### **6-5. AdaGrad**
+- Adaptive Gradient의 줄임말
+- 손실함수 곡면의 변화에 따라 적응적으로 학습률을 정하는 알고리즘
+- 손실 함수의 경사가 가파를 때 큰 폭으로 이동하면 최적화 경로를 벗어나서 최소 지점을 지나칠 수 있음
+  - 많이 변화한 변수는 최적 해에 근접했을 거란 가정 하에 작은 크기로 이동하면서 세밀하게 값을 조정(낮은 learning rate)
+  - 적게 변화한 변수들은 큰 크기로 이동하며 빠르게 오차값을 줄임(높은 learning rate)
+- 코드
+```Python
+torch.optim.Adagrad(params, lr=0.01, lr_decay=0, weight_decay=0, 
+                    initial_accumulator_value=0, eps=1e-10, foreach=None, *, maximize=False)
+```
 
+### **6-6. RMSProp**
+- AdaGrad에서 학습이 안되는 문제를 해결하기 위해 hyper parameter(β)가 추가된 방식
+- 변화량이 더 클수록 학습률이 작아져서 조기 종료되는 문제를 해결하기 위해 학습률 크기를 비율로써 조절할 수 있도록 제안된 방법
+- 코드
+```Python
+torch.optim.RMSprop(params, lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0, 
+                    momentum=0, centered=False, foreach=None, maximize=False, differentiable=False)
+```
+
+### **6-7. Adam**
+- Momentum + RMSProp
+- 진행하던 속도에 관성도 주고, 최근 경로의 곡면 변화량에 따른 적응적 학습률을 갖는 알고리즘
+- 매우 넓은 범위의 아키텍쳐를 가진 서로 다른 신경망에서 잘 작동한다는 것이 증명됨
+- 코드
+```Python
+torch.optim.Adam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, 
+                 amsgrad=False, *, foreach=None, maximize=False, capturable=False, differentiable=False, fused=False)
+```
 
 # **7. 모델 구현**
 - Sequential 모델로 layer를 쌓는 방식을 주로 활용
