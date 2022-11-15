@@ -140,16 +140,40 @@
   - 손실 함수: 샘플 하나에 대한 손실을 정의  
   - 비용 함수: 훈련 세트에 있는 모든 샘플에 대한 손실 함수의 합  
   ※ 사실 둘을 딱히 구분해서 사용하지는 x
+- nn.BCELoss
+  - y값이 (0,1) 등으로 분류되는 이진 분류기를 훈련할 때 자주 사용됨
+  - target과 input 확률 사이의 이진 교차 엔트로피를 측정하는 기준
+  - 활성화 함수로 **sigmoid**(0 <= 출력값 <= 1) 사용
+    - 신경망의 출력을 가장한 랜덤 벡터에 sigmoid activation function을 적용 -> probability를 이진 벡터화 -> target을 0과 1로 이루어진 벡터로 만들어 손실 계산
+  - 자동 인코더와 같은 재구성 오류를 측정하는 데 사용
+  - target(y)은 0과 1 사이의 숫자여야 함
+  - 코드
+  ```Python
+  torch.nn.BCELoss(weight=None, size_average=None, reduce=None, reduction='mean')
+  ```
+  - Parameters>
+    - reduction: 'mean' => (출력의 합) / (출력 요소의 수)
+    - reduction: 'sum' => 출력의 합
+    
 - nn.CrossEntropyLoss
-  -  입력 logit과 target 사이의 교차 엔트로피 손실을 계산
-  -  k개 클래스의 분류 문제를 훈련시킬 때 유용
-  -  추가적인 증강 가중치는 1차원 tensor여야 함
-  -  불균형한 훈련 세트에 특히 유용함
+  - 범주형 교차 엔트로피(Categorical CrossEntropy)
+  - 입력 logit과 target 사이의 교차 엔트로피 손실을 계산
+  - 출력을 클래스 소속 확률에 대한 예측으로 이해할 수 있는 문제에서 사용
+    - k개 클래스의 분류 문제를 훈련시킬 때 유용함
+  - 활성화 함수로 **softmax**(모든 벡터 요소의 값은 0 ~ 1, 모든 요소의 합은 1) 사용
+  - 라벨이 one-hot encoding된 형태로 제공될 때 사용 가능
+    - 각 입력이 클래스 하나에 속하고 각 클래스에는 고유한 인덱스가 있다고 가정 
+  - 추가적인 증강 가중치는 1차원 tensor여야 함
+  - 불균형한 훈련 세트에 특히 유용함
   - 코드
   ```Python
   torch.nn.CrossEntropyLoss(weight=None, size_average=None, ignore_index=- 100, reduce=None, 
                             reduction='mean', label_smoothing=0.0)
   ```
+
+- sparse_categorical_crossentropy
+  - torch에서는 따로 지원되지 않는 것처럼 보인다..
+
 # **4. 에폭(Epoch)**
 - 전체 훈련 데이터가 학습에 한 번 사용되는 주기 
 - 각 데이터를 모델에서 몇 번씩 복습할 것인지에 대한 횟수
@@ -163,12 +187,15 @@
 # **6. 옵티마이져(Optimizer)**
 - 비용 함수의 값을 최소로 하는 W(기울기)와 b(절편)을 찾는 방법(알고리즘)
 
-### **6-1.경사 하강법(Gradient Descent)**
+### **6-1. 학습율(learning rate)**
+- 기울기 값 변경 시 얼마나 크게 변경할 지 결정
+
+### **6-2.경사 하강법(Gradient Descent)**
 - 가장 기본적인 옵티마이져 알고리즘
 - cost가 최소화되는 지점: 접선의 기울기가 0이 되는 지점(= 미분값이 0이 되는 지점)
 - 비용 함수를 미분하여 현재 w에서의 접선의 기울기를 구하고, 접선의 기울기가 낮은 방향으로 w의 값을 업데이트하는 작업 반복
 
-### **6-2. SGD(Stochastic Gradient Descent)**
+### **6-3. SGD(Stochastic Gradient Descent)**
 - **확률적** 경사 하강법
 - 배치 크기가 1인 경사 하강법 알고리즘
   - 하나의 Training data마다 비용(손실)을 계산하고 바로 경사 하강법을 적용하여 가중치를 빠르게 update하는 방법
@@ -179,8 +206,10 @@
 optimizer = torch.optim.SGD(model.parameters(), lr = 0.01, momentum = 0.9)
 ```
 
-### **6-3. 학습율(learning rate)**
-- 기울기 값 변경 시 얼마나 크게 변경할 지 결정
+### **6-4. 미니배치 경사 하강법(Mini-Batch Gradient Descent)**
+- 
+
+
 
 # **7. 모델 구현**
 - Sequential 모델로 layer를 쌓는 방식을 주로 활용
