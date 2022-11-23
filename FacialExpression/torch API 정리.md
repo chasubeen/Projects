@@ -13,7 +13,7 @@
   - 입력과 출력 간의 복잡한 관계를 만들어 입력에서 필요한 정보를 얻음
   - 입력과 관련 있는 미분값을 얻으며 역전파 발생
   
-  **[종류]**  
+  **[활성화 함수의 종류]**  
   ### **- torch.nn.ReLU**
     - 비선형 활성화(activation)는 모델의 입력과 출력 사이에 복잡한 관계(mapping)를 생성
     - 선형 변환 후에 적용 -> 비선형성(nonlinearity) 도입, 신경망이 다양한 현상을 학습할 수 있도록 함
@@ -179,7 +179,6 @@
   torch.nn.CrossEntropyLoss(weight=None, size_average=None, ignore_index=- 100, reduce=None, 
                             reduction='mean', label_smoothing=0.0)
   ```
-### **- 
   - Focal Loss
     - CrossEntropy의 클래스 불균형 문제를 다루기 위한 개선된 버전 
     - 어렵거나 쉽게 오분류되는 케이스에 대하여 더 **큰** 가중치를 주는 방법
@@ -189,8 +188,6 @@
     - 각 클래스의 Loss 비율을 조절하는 weight를 곱해주어 imbalance class 문제에 대한 개선을 하고자 하는 방법 
     - CrossEntropyLoss 자체에 비율을 보상
     - 일반적으로 0 <= weight <= 1
-
-
 
 ### **- sparse_categorical_crossentropy**
   - torch에서는 따로 지원되지 않는 것처럼 보인다..
