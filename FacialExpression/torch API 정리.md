@@ -9,12 +9,12 @@
 # **2. Convolutional Layer**
 - 입력 데이터로부터 특징을 추출하는 역할
 - 특징을 추출하는 필터(Filter) 사용
-- 필터의 값을 비선형 값으로 바꿔주는 활성화 함수(activation function)을 사용
+- 필터의 값을 비선형 값으로 바꿔주는 **활성화 함수(activation function)** 를 사용
   - 입력과 출력 간의 복잡한 관계를 만들어 입력에서 필요한 정보를 얻음
   - 입력과 관련 있는 미분값을 얻으며 역전파 발생
   
   **[종류]**  
-  - torch.nn.ReLU
+  ### **- torch.nn.ReLU**
     - 비선형 활성화(activation)는 모델의 입력과 출력 사이에 복잡한 관계(mapping)를 생성
     - 선형 변환 후에 적용 -> 비선형성(nonlinearity) 도입, 신경망이 다양한 현상을 학습할 수 있도록 함
     - CNN에서 좋은 성능을 보였고, 현재 딥러닝에서 가장 많이 사용하는 활성화 함수
@@ -26,7 +26,7 @@
     - 입력: (*), 여기서 *는 임의의 차원 수
     - 출력: (*), 입력과 동일한 차원
     
-  - torch.nn.Softmax
+  ### **- torch.nn.Softmax**
     - n차원 출력 텐서의 요소가 [0,1] 범위에 있고(**정규화**) 합이 1이 되도록 n차원 입력 텐서에 softmax 함수를 적용
     - 세 개 이상으로 분류하는 **다중 클래스** 분류에서 사용되는 활성화 함수
     - 분류될 클래스가 n개라 할 때, n차원의 벡터를 입력받아 각 클래스에 속할 확률을 추정
@@ -36,7 +36,7 @@
     torch.nn.Softmax(dim = 1) # 결과가 1개로 출력된다.
     ```
   
-  - torch.nn.Sigmoid
+  ### **- torch.nn.Sigmoid**
     - S자형 곡선 또는 시그모이드 곡선을 갖는 수학 함수, 로지스틱으로도 불린다.
     - 반환값은 단조증가하는 것이 일반적이지만 단조감소할 수도 있음
     - 반환값(y축)은 흔히 0에서 1까지의 범위를 가짐, 또는 -1부터 1까지의 범위를 가지기도 함
@@ -47,7 +47,7 @@
     ```
     - 여러 단점들로 인해 현재는 많이 사용하지 x 
 
-- torch.nn.Conv2d
+### **- torch.nn.Conv2d**
   - 입력의 너비와 높이 방향의 합성곱 연산을 구현한 Layer
   - 여러 개의 입력 평면으로 구성된 입력 신호에 2D 컨볼루션을 적용
   - 코드
@@ -149,7 +149,7 @@
   - 손실 함수: 샘플 하나에 대한 손실을 정의  
   - 비용 함수: 훈련 세트에 있는 모든 샘플에 대한 손실 함수의 합  
   ※ 사실 둘을 딱히 구분해서 사용하지는 x
-- nn.BCELoss
+### **- nn.BCELoss**
   - y값이 (0,1) 등으로 분류되는 이진 분류기를 훈련할 때 자주 사용됨
   - target과 input 확률 사이의 이진 교차 엔트로피를 측정하는 기준
   - 활성화 함수로 **sigmoid**(0 <= 출력값 <= 1) 사용
@@ -164,13 +164,13 @@
     - reduction: 'mean' => (출력의 합) / (출력 요소의 수)
     - reduction: 'sum' => 출력의 합
     
-- nn.CrossEntropyLoss
+### **- nn.CrossEntropyLoss**
   - 범주형 교차 엔트로피(Categorical CrossEntropy)
   - 입력 logit과 target 사이의 교차 엔트로피 손실을 계산
   - 출력을 클래스 소속 확률에 대한 예측으로 이해할 수 있는 문제에서 사용
     - k개 클래스의 분류 문제를 훈련시킬 때 유용함
   - 활성화 함수로 **softmax**(모든 벡터 요소의 값은 0 ~ 1, 모든 요소의 합은 1) 사용
-  - 라벨이 one-hot encoding된 형태로 제공될 때 사용 가능
+  - 라벨이 **one-hot encoding**된 형태로 제공될 때 사용 가능
     - 각 입력이 클래스 하나에 속하고 각 클래스에는 고유한 인덱스가 있다고 가정 
   - 추가적인 증강 가중치는 1차원 tensor여야 함
   - 불균형한 훈련 세트에 특히 유용함
@@ -179,8 +179,20 @@
   torch.nn.CrossEntropyLoss(weight=None, size_average=None, ignore_index=- 100, reduce=None, 
                             reduction='mean', label_smoothing=0.0)
   ```
+### **- 
+  - Focal Loss
+    - CrossEntropy의 클래스 불균형 문제를 다루기 위한 개선된 버전 
+    - 어렵거나 쉽게 오분류되는 케이스에 대하여 더 **큰** 가중치를 주는 방법
+  - CrossEntropyLoss의 경우 잘 분류한 경우보다 **잘못** 예측한 경우에 대하여 페널티를 부여하는 것에 초점
+    - 확률이 낮은 케이스에 페널티를 주는 역할만 하고 확률이 높은 케이스에는 어떠한 보상도 주지 x
+  - Balanced CrossEntropyLoss
+    - 각 클래스의 Loss 비율을 조절하는 weight를 곱해주어 imbalance class 문제에 대한 개선을 하고자 하는 방법 
+    - CrossEntropyLoss 자체에 비율을 보상
+    - 일반적으로 0 <= weight <= 1
 
-- sparse_categorical_crossentropy
+
+
+### **- sparse_categorical_crossentropy**
   - torch에서는 따로 지원되지 않는 것처럼 보인다..
 
 # **4. 에폭(Epoch)**
