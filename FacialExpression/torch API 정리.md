@@ -32,10 +32,22 @@
     - 분류될 클래스가 n개라 할 때, n차원의 벡터를 입력받아 각 클래스에 속할 확률을 추정
     - 지수함수 사용 => overflow 발생 위험성 존재
     - 코드
+    
     ```Python
-    torch.nn.Softmax(dim = 1) # 결과가 1개로 출력된다.
+    torch.nn.Softmax(dim = 1) 	# 결과가 1개로 출력된다.
     ```
+		
+  ### **- torch.nn.LogSoftmax**
+	- 로그({Softmax}(x)) 함수를 n차원 입력 텐서에 적용
+		- softmax 함수 적용 시 log transformation을 수행한다고 생각하면 됨
+	- torch.nn.CrossEntropyLoss의 경우 nn.LogSoftmax와 nn.NLLLoss 연산의 조합임
+  - softmax 함수의 경우 기울기 소명 문제에 취약함 -> 이를 보완해 줄 수 있음
+  - 코드
   
+  ```Python
+	torch.nn.LogSoftmax(dim = None) # dim: LogSoftmax가 계산되는 차원
+	```
+		
   ### **- torch.nn.Sigmoid**
     - S자형 곡선 또는 시그모이드 곡선을 갖는 수학 함수, 로지스틱으로도 불린다.
     - 반환값은 단조증가하는 것이 일반적이지만 단조감소할 수도 있음
