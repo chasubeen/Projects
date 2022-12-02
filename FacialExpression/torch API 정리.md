@@ -275,6 +275,13 @@ torch.optim.RMSprop(params, lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0,
 torch.optim.Adam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, 
                  amsgrad=False, *, foreach=None, maximize=False, capturable=False, differentiable=False, fused=False)
 ```
+- Parameters>
+	- params(iterable): 매개변수 그룹을 최적화하거나 정의하는 데 사용할 수 있는 매개변수들의 잡합
+	- lr(float): learning rate, 학습률(default = 1e-3)
+	- betas(Tuple[float, float]): 가중치의 running average 또는 그 제곱을 계산하기 위해 사용할 계수들(default = (0.9, 0.999))
+	- eps (float): 수치 안정성을 향상시키기 위해 분모에 추가된 항 => 0으로 나누는 것 방지(default = 1e-8)
+	- weight_decay(float): weight decay(가중치 버림/ L2 규제) (default = 0)
+	- 나머지는 일단 나중에 정리한다,,
 
 # **7. 모델 구현**
 - Sequential 모델로 layer를 쌓는 방식을 주로 활용
