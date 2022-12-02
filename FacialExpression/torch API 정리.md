@@ -216,6 +216,7 @@
 
 # **6. 옵티마이져(Optimizer)**
 - 비용 함수의 값을 최소로 하는 W(기울기)와 b(절편)을 찾는 방법(알고리즘)
+- https://hiddenbeginner.github.io/deeplearning/2019/09/22/optimization_algorithms_in_deep_learning.html#Adam
 
 ### **6-1. 학습율(learning rate)**
 - 기울기 값 변경 시 얼마나 크게 변경할 지 결정
