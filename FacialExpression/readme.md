@@ -42,6 +42,10 @@
 <img src = "https://user-images.githubusercontent.com/98953721/209521622-47e2f7b8-fd6f-4645-b063-0a37d82fada1.png" width = 200 height = 400>
 
 
+**3) 데이터 분포 확인**  
+<img src = "https://user-images.githubusercontent.com/98953721/209521815-a459f056-dca0-41f7-9fbb-453b2a234760.png" width = 500 height = 300>
+
+
 
 
 
