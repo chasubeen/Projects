@@ -111,5 +111,5 @@ early_stopping = EarlyStopping(patience = 10, verbose = False) # 조기 종료(�
 
 ### **#️⃣ Reference**
 - [VGG19 관련 논문(Very Deep Convolutional)](https://arxiv.org/abs/1409.1556)  
-- [Learning rate & batch size best 조합 찾기](https://inhovation97.tistory.com/32)  
+- [Learning rate & batch size best 조합 찾기(기술 블로그)](https://inhovation97.tistory.com/32)  
 - [learning rate& batch size 관련 논문](https://www.sciencedirect.com/science/article/pii/S2405959519303455#fig2)  
