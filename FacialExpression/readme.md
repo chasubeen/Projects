@@ -41,9 +41,17 @@
 - **감정_번호** 형식으로 통일
 <img src = "https://user-images.githubusercontent.com/98953721/209521622-47e2f7b8-fd6f-4645-b063-0a37d82fada1.png" width = 200 height = 400>
 
+* 이후 데이터를 효율적으로 불러오기 위해 train 데이터의 경우 csv 파일로 저장
+
 
 ### **4️⃣ 모델링**
-
+- 프로젝트 목표: 7개의 카테고리로 분류된 감정들 중 **가장 적합한** 감정을 예측하는 모델 생성  
+  -> **분류(Classification)** 문제, **1개**의 정답  
+- 활용 모듈: Pytorch(version: 1.12.1 + cu116)
+- 전이 학습 방법 활용
+  - 여러 분류 모델 활용
+  1) [VGG19](https://github.com/chasubeen/Projects/tree/main/FacialExpression/VGG19)
+  2) 
 
 
 
