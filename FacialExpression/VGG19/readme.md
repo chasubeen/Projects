@@ -23,7 +23,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr = 1e-2, momentum = 0.9)
 ```
 - learning rate
   - 초기: 1e-2
-  - lr_scheduler와 early stopping 적용
+  - lr_scheduler, early stopping 적용
 ```Python
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode = 'min', patience = 5, factor = 0.1, 
                                                        min_lr = 1e-10,verbose = True)  # lr scheduling
@@ -57,11 +57,14 @@ early_stopping = EarlyStopping(patience = 10, verbose = False) # 조기 종료(�
 |**활성화 함수**|softmax|softmax|**log**softmax|
 |**Best Acc**|0.6427|**0.6622**|0.6606|
 
+- - -
+
 ✅ **Case 3**
 - Optimizer 변경(SGD -> **Adam**)
 - 실패한 모델들 
   - 손실함수: CrossEntropyLoss
   - 활성화 함수: softmax
+  - lr_scheduler, early stopping 적용
  
 |   |**adam_ver1**|**adam_ver2**|**adam_ver4**|
 |------|-------|-------|-------|
@@ -78,9 +81,35 @@ early_stopping = EarlyStopping(patience = 10, verbose = False) # 조기 종료(�
 -> learning rate를 **줄인** 후 다시 모델링 진행  
 
 ✅ **Case 4**
-- kjsdfkljfdksjsdklfsd
+- Case 3에서 **learning rate & batch size** 튜닝 -> 적절한 조합 탐색
+- 손실함수: CrossEntropyLoss
+- 활성화 함수: softmax
+- lr_scheduler, early stopping 적용
+- Epoch: 200
+
+|   |**adam_ver3**|**adam_ver5**|**adam_ver6**|
+|------|-------|-------|-------|
+|**batch**|128|128|64|
+|**초기 lr**|1e-4|1e-5|1e-5|
+|**min_lr**|1e-10|1e-12|1e-12|
+|**Best Acc**|0.6137|**0.6344**|0.6249|
+
+✅ **Case 5**
+- Case 4에서 **손실 함수 & 활성화 함수** 튜닝
+- batch size: 128
+- learning rate
+  - 초기: 1e-5
+  - lr_scheduler, early stopping 적용(min_lr: 1e-12)
+- Epoch: 200 
+
+|   |**adam_ver7**|**adam_ver8**|
+|------|-------|-------|
+|**손실 함수**|**가중** CrossEntropyLoss|**가중** CrossEntropyLoss|
+|**활성화 함수**|softmax|**log**softmax|
+|**Best Acc**|0.6238|**0.6444**|
 
 
-
-
-
+### **#️⃣ Reference**
+[Learning rate & batch size best 조합 찾기](https://inhovation97.tistory.com/32)
+[learning rate& batch size 관련 논문](https://www.sciencedirect.com/science/article/pii/S2405959519303455#fig2)
+[VGG19 관련 논문(Very Deep Convolutional)](https://arxiv.org/abs/1409.1556)
