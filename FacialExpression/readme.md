@@ -49,10 +49,10 @@
   -> **분류(Classification)** 문제, **1개**의 정답  
 - 활용 모듈: Pytorch(version: 1.12.1 + cu116)
 - 전이 학습(transfer learning) 활용
-  - 활용한 분류 모델
-  1) [VGG19](https://github.com/chasubeen/Projects/tree/main/FacialExpression/VGG19)
-  2) [ResNet](https://github.com/chasubeen/Projects/tree/main/FacialExpression/ResNet)
-  3) [EfficientNet](https://github.com/chasubeen/Projects/tree/main/FacialExpression/EfficientNet)
+- 활용한 분류 모델  
+  [⚙️VGG19](https://github.com/chasubeen/Projects/tree/main/FacialExpression/VGG19)    
+  [⚙️ResNet](https://github.com/chasubeen/Projects/tree/main/FacialExpression/ResNet)    
+  [⚙️EfficientNet](https://github.com/chasubeen/Projects/tree/main/FacialExpression/EfficientNet)    
   - 개별 분류 모델에 각각 데이터 셋을 학습
   - learning rate, batch size 등의 optimizer들을 조정하며 여러 조건들에서 학습 진행
 - 이후 **앙상블 기법**을 적용하여 여러 분류기를 합쳐 성능 향상
