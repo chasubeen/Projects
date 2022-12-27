@@ -33,11 +33,54 @@ early_stopping = EarlyStopping(patience = 10, verbose = False) # 조기 종료(�
 - Epoch: 100
 - **손실함수 & 활성화 함수** 튜닝
 
-|   |sgd_ver1|sgd_ver2|sgd_ver3|
-|------|-----|-----|-----|
-|손실 함수|CrossEntropyLoss|**가중** CrossEntropyLoss|**가중** CrossEntropyLoss|
-|활성화 함수|softmax|softmax|**log**softmax|
-|Best Acc|0.6115|0.6133|**0.6654**|
+|   |**sgd_ver1**|**sgd_ver2**|**sgd_ver3**|
+|------|-------|-------|-------|
+|**손실 함수**|CrossEntropyLoss|**가중** CrossEntropyLoss|**가중** CrossEntropyLoss|
+|**활성화 함수**|softmax|softmax|**log**softmax|
+|**Best Acc**|0.6115|0.6133|**0.6654**|
+
+
+✅ **Case 2**
+- Case 1에서 **batch size**만 변경(64 -> 128)
+- batch size가 **클** 때
+  - 한 번 학습할 때 많은 데이터로 학습
+  - 빠른 학습/수렴 속도 -> local optima에 빠질 확률이 작음
+  - 작은 배치에 비해 과적합 위험성 증가(batch가 크면 계산되는 loss값의 편차가 작으므로)
+- batch size가 **작을** 때
+  - 1 epoch 당 iteration이 크기 때문에 step이 많아짐
+  - 작은 데이터로 학습 -> loss의 분산이 커서 정규화 효과가 있음, 조금 더 다양하고 예리하게 학습할 수 있음
+  - 긴 학습시간, 많은 step 수로 인해 local minima에 빠질 위험성 증가
+
+|   |**sgd_ver4**|**sgd_ver5**|**sgd_ver6**|
+|------|-------|-------|-------|
+|**손실 함수**|CrossEntropyLoss|**가중** CrossEntropyLoss|**가중** CrossEntropyLoss|
+|**활성화 함수**|softmax|softmax|**log**softmax|
+|**Best Acc**|0.6427|**0.6622**|0.6606|
+
+✅ **Case 3**
+- Optimizer 변경(SGD -> **Adam**)
+- 실패한 모델들 
+  - 손실함수: CrossEntropyLoss
+  - 활성화 함수: softmax
+ 
+|   |**adam_ver1**|**adam_ver2**|**adam_ver4**|
+|------|-------|-------|-------|
+|**batch**|64|128|64|
+|**초기 lr**|0.0005|0.001|0.0001|
+|**min_lr**|1e-7|1e-8|1e-10|
+|**Epoch**|100|200|200|
+|**Best Acc**|0.24xx(중단)|(중단)|(중단)|
+
+- 실패 원인 분석: batch size와 learning rate의 관계
+<img src = "https://user-images.githubusercontent.com/98953721/209615216-0c5679ab-11db-438d-846d-06bc2f2d6a98.png" width = 300 height = 300>
+
+-> 일반적으로 learning rate와 batch size는 **양의 상관관계**를 보인다.  
+-> learning rate를 **줄인** 후 다시 모델링 진행  
+
+✅ **Case 4**
+- kjsdfkljfdksjsdklfsd
+
+
 
 
 
