@@ -48,12 +48,15 @@
 - 프로젝트 목표: 7개의 카테고리로 분류된 감정들 중 **가장 적합한** 감정을 예측하는 모델 생성  
   -> **분류(Classification)** 문제, **1개**의 정답  
 - 활용 모듈: Pytorch(version: 1.12.1 + cu116)
-- 전이 학습 방법 활용
-  - 여러 분류 모델 활용
+- 전이 학습(transfer learning) 활용
+  - 활용한 분류 모델
   1) [VGG19](https://github.com/chasubeen/Projects/tree/main/FacialExpression/VGG19)
-  2) 
+  2) [ResNet](https://github.com/chasubeen/Projects/tree/main/FacialExpression/ResNet)
+  3) [EfficientNet](https://github.com/chasubeen/Projects/tree/main/FacialExpression/EfficientNet)
+  - 개별 분류 모델에 각각 데이터 셋을 학습
+  - learning rate, batch size 등의 optimizer들을 조정하며 여러 조건들에서 학습 진행
+- 이후 **앙상블 기법**을 적용하여 여러 분류기를 합쳐 성능 향상
 
+### **5️⃣ 최종 결과**
 
-
-
-
+### **6️⃣ 의의/ 한계**
