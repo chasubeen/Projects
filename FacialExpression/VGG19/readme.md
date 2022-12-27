@@ -36,7 +36,7 @@ early_stopping = EarlyStopping(patience = 10, verbose = False) # 조기 종료(�
 |   |**sgd_ver1**|**sgd_ver2**|**sgd_ver3**|
 |------|-------|-------|-------|
 |**손실 함수**|CrossEntropyLoss|**가중** CrossEntropyLoss|**가중** CrossEntropyLoss|
-|**활성화 함수**|softmax|softmax|**log**softmax|
+|**활성화 함수**|softmax|softmax|**log** softmax|
 |**Best Acc**|0.6115|0.6133|**0.6654**|
 
 
@@ -54,7 +54,7 @@ early_stopping = EarlyStopping(patience = 10, verbose = False) # 조기 종료(�
 |   |**sgd_ver4**|**sgd_ver5**|**sgd_ver6**|
 |------|-------|-------|-------|
 |**손실 함수**|CrossEntropyLoss|**가중** CrossEntropyLoss|**가중** CrossEntropyLoss|
-|**활성화 함수**|softmax|softmax|**log**softmax|
+|**활성화 함수**|softmax|softmax|**log** softmax|
 |**Best Acc**|0.6427|**0.6622**|0.6606|
 
 - - -
@@ -105,7 +105,7 @@ early_stopping = EarlyStopping(patience = 10, verbose = False) # 조기 종료(�
 |   |**adam_ver7**|**adam_ver8**|
 |------|-------|-------|
 |**손실 함수**|**가중** CrossEntropyLoss|**가중** CrossEntropyLoss|
-|**활성화 함수**|softmax|**log**softmax|
+|**활성화 함수**|softmax|**log** softmax|
 |**Best Acc**|0.6238|**0.6444**|
 
 
