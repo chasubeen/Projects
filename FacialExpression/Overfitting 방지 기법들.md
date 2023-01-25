@@ -92,15 +92,19 @@ torchvision_dataset = TorchvisionMaskDataset(
 # **2. 조기 종료(Early Stopping)**
 
 # **3. L2 정규화(L2 규제)**
-- 규제(Regularization): 학습이 과대적합되는 것을 방지하고자 일종의 penalty를 부여하는 것\
+- 규제(Regularization): 학습이 과대적합되는 것을 방지하고자 일종의 penalty를 부여하는 것
 
-### **3-1. 
-- 각 가중치 제곱의 합에 규제 강도를 곱한 값(Error = MSE + α𝑤^2)
+### **3-1.L2 정규화(L2 규제)**
+- 각 가중치 제곱의 합에 규제 강도를 곱한 값($Error = MSE + α𝑤^2$)
 - 원형의 경계를 만들어서 학습 데이터셋의 최적 지점인 w* 에 도달하지 못하게 하고 경계 내부의 v* 까지만 도달할 수 있도록 하는 방식
 - Optimizer로 Adam을 사용할 경우 **weight_decay** 파라미터를 추가할 수 있음
   - 값이 클수록 규제 강도가 강한 것을 의미 -> 가중치가 더 많이 감소됨
+  - 릿지(Ridge) 모델에 적용된다.
   - 코드
   ```Python
   optimizer = optim.Adam(model.parameters(), lr = 1e-3, weight_decay = 1e-3)
   ```
+
+### **3-2. L1 정규화(L1 규제)**
+- 가중치의 합을 더한 값에 규제 강도를 곱하여 오차에 더한 값(Error = 
 
