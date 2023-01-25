@@ -119,7 +119,118 @@ torchvision_dataset = TorchvisionMaskDataset(
 - 훈련 시간이 길어지는 단점이 존재
 - 출력층에서는 예측값을 산출해야 하기 때문에 드롭아웃을 사용해서는 안되고, **은닉층**에 대해서만 사용해야 함
 - 모델 평가 단계에서는 드롭아웃을 실시하지 않은 모델로 평가해야 함
-  - 파이토치에서는 .eval() 를 통해서 원래 전체 모델을 사용할 수 있음
+  - 파이토치에서는 ```.eval()``` 를 통해서 원래 전체 모델을 사용할 수 있음
 
 # **5. 배치 정규화(Batch Normalization)**
-- 
+- 기울기 소멸(gradient vanishing)이나 기울기 폭발(gradient exploding)과 같은 문제를 해결하기 위한 방법
+- 일반적으로 기울기 소멸이나 폭발 문제를 해결하기 위해 손실 함수로 ```ReLu```를 사용하거나 초깃값 튜닝, 학습률(learning rate) 등을 조정
+- 분산된 분포를 정규분포로 만들기 위해 표준화와 유사한 방식을 미니 배치에 적용하여 **평균 = 0, 표준편차 = 1**로 유지되도록 함
+- 단계>
+  1) 미니 배치 평균 구하기
+  2) 미니 배치의 분산, 표준편차 구하기
+  3) 정규화 수행
+  4) 스케일(scale) 조정(데이터 분포 조정)
+- 장점: 매 단계마다 활성화 함수를 거치면서 데이터셋 분포를 **일정**하게 유지시킬 수 있음 => 속도 향상
+- 단점
+  - 배치 크기가 작을 때는 정규화 값이 기존 값과 다른 방향으로 훈련될 수 있음
+    - 분산이 0인 경우 정규화 자체가 수행되지 않는 경우가 생길 수 있음
+  - RNN의 경우 네트워크 계층별로 미니 정규화를 적용해야 함 -> 모델이 더 복잡해지면서 비효율적일 수 있음
+- 코드
+```Python
+torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, device=None, dtype=None)
+```
+
+# **6. 교란 라벨 (Disturb Label) / 교란 값(Disturb Value)**
+- 분류(classification) 문제에서 일정 비율의 라벨을 의도적으로 **잘못된** 라벨로 만들어서 학습을 방해하는 방식
+  - 단순한 방식이지만 과적합을 효과적으로 막을 수 있음
+- 코드  
+**1. DisturbLabel 객체 정의**  
+```Python
+class DisturbLabel(torch.nn.Module):
+    def __init__(self, alpha, num_classes): 
+    #alpha: 교란 라벨로 처리할 비율, num_classes: 데이터의 클래스 개수
+        super(DisturbLabel, self).__init__()
+        self.alpha = alpha
+        self.C = num_classes
+        self.p_c = (1 - ((self.C - 1) / self.C) * (alpha / 100)) # 실제 라벨을 뽑을 확률
+        self.p_i = (1-self.p_c)/(self.C-1) # 나머지
+ 
+    def forward(self, y):
+        y_tensor = y.type(torch.LongTensor).view(-1, 1)      
+        depth = self.C
+        y_one_hot = torch.ones(y_tensor.size()[0], depth) * self.p_i
+        y_one_hot.scatter_(1, y_tensor, self.p_c)
+        y_one_hot = y_one_hot.view(*(tuple(y.shape) + (-1,))) # create disturbed labels    
+        distribution = torch.distributions.OneHotCategorical(y_one_hot) # sample from Multinoulli distribution
+        y_disturbed = distribution.sample()
+        y_disturbed = y_disturbed.max(dim=1)[1]
+        return y_disturbed
+```
+  
+**2. 교란 라벨 추가 & 학습 진행**  
+```Python
+disturblabels = DisturbLabel(alpha = 30, num_classes = 10) # 교란 라벨 생성
+ 
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(resnet.parameters(), lr=1e-3)
+loss_ = [] # 그래프를 그리기 위한 loss 저장용 리스트 
+n = len(trainloader) # 배치 개수
+ 
+for epoch in range(50): 
+    running_loss = 0.0
+    for data in trainloader:
+        inputs, labels = data[0].to(device), data[1].to(device) # 배치 데이터 
+        optimizer.zero_grad()
+        
+        outputs = resnet(inputs) # 예측값 산출 
+        labels = disturblabels(labels).to(device) # 기존 라벨 -> 교란 라벨
+        
+        loss = criterion(outputs, labels) # 손실함수 계산
+        loss.backward() # 손실함수 기준으로 역전파 선언
+        optimizer.step() # 가중치 최적화
+        running_loss += loss.item()
+ 
+    loss_.append(running_loss / n)    
+    print('[%d] loss: %.3f' %(epoch + 1, running_loss / n))
+```
+
+# **7. 라벨 스무딩(Label Smoothing)**
+- 일반적인 분류 문제에서는 **softmax**나 **sigmoid** 함수를 통해서 0 또는 1의 값을 예측
+- CrossEntropyLoss를 계산할 때, 실제값을 0 or 1이 아닌 0.2 or 0.8로 구성해서 과적합을 방지하는 방식
+- 라벨 1을 예측 시 확률 값이 0.7로 나타나면 원래는 1로 나오도록 학습이 진행됨 
+  - 이때 기준을 0.8로 낮추면 보다 적게 실제값과 가까워지는 방향으로 학습하고, 이를 통해서 과적합을 완화할 수 있음
+- 파이토치에서 제공하는 nn.CrossEntropyLoss() 함수는 실제 라벨의 원-핫 벡터를 입력받을 수 없다.
+  - 따라서 라벨 스무딩을 적용하려면 One - hot 벡터를 사용할 수 있도록 별도로 손실 함수를 정의해야 함
+- 코드
+```Python
+class LabelSmoothingLoss(nn.Module):
+    def __init__(self, classes, smoothing = 0.0, dim = -1):
+    # classes: 데이터셋의 클래스 개수, smoothing: 스무딩 비율, dim: 차원
+        super(LabelSmoothingLoss, self).__init__()
+        self.confidence = 1.0 - smoothing
+        self.smoothing = smoothing
+        self.cls = classes
+        self.dim = dim
+ 
+    def forward(self, pred, target):
+        pred = pred.log_softmax(dim=self.dim) # CrossEntropy 부분의 log softmax 미리 계산하기
+        with torch.no_grad():
+            # true_dist = pred.data.clone()
+            true_dist = torch.zeros_like(pred) # 예측값과 동일한 크기의 영(zero) 텐서 만들기
+            true_dist.fill_(self.smoothing / (self.cls - 1)) # alpha/(K-1)을 만들어 줌(alpha/K로 할 수도 있음)
+            true_dist.scatter_(1, target.data.unsqueeze(1), self.confidence) # (1-alpha)y + alpha/(K-1)
+        return torch.mean(torch.sum(-true_dist * pred, dim=self.dim)) # CrossEntropyLoss 계산
+```
+
+```Python
+criterion = LabelSmoothingLoss(classes=10, smoothing=0.2)
+optimizer = optim.Adam(resnet.parameters(), lr=1e-3)
+```
+
+
+
+
+
+
+
+
