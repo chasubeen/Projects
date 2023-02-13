@@ -1,5 +1,6 @@
 # **0. Reference**
 [기술블로그_과적합 방지를 통한 모델 성능 개선](https://yeong-jin-data-blog.tistory.com/entry/%ED%8C%8C%EC%9D%B4%ED%86%A0%EC%B9%98-%EC%8A%A4%ED%84%B0%EB%94%94-%EA%B3%BC%EC%A0%81%ED%95%A9-%EB%B0%A9%EC%A7%80%EB%A5%BC-%ED%86%B5%ED%95%9C-%EB%AA%A8%EB%8D%B8-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EB%B0%A9%EB%B2%95)
+[교란 라벨링 관련 논문](https://arxiv.org/abs/1605.00055)
 
 # **1. 데이터 증식(Data Augmentation)**
 - 학습에 필요한 추가 데이터 수집이 어려운 경우 기존 데이터를 증식하는 방법
