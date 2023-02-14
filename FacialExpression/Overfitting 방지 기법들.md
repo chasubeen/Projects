@@ -161,6 +161,7 @@ class DisturbLabel(torch.nn.Module):
         y_tensor = y.type(torch.LongTensor).view(-1, 1)      
         depth = self.C
         y_one_hot = torch.ones(y_tensor.size()[0], depth) * self.p_i
+        # Tensor.scatter_(dim, index, src, reduce=None) → Tensor
         y_one_hot.scatter_(1, y_tensor, self.p_c)
         y_one_hot = y_one_hot.view(*(tuple(y.shape) + (-1,))) # create disturbed labels    
         distribution = torch.distributions.OneHotCategorical(y_one_hot) # sample from Multinoulli distribution
