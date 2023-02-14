@@ -147,6 +147,9 @@ torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, affine=True, track_r
 - 손실층(loss layer)에 규제를 두는 방식
 - 코드  
 **1. DisturbLabel 객체 정의**  
+- 흐름은 이해가 되는데 문법이 이게 뭐여..  
+- 코드 리뷰 하기,,
+
 ```Python
 class DisturbLabel(torch.nn.Module):
     def __init__(self, alpha, num_classes): 
@@ -229,11 +232,3 @@ class LabelSmoothingLoss(nn.Module):
 criterion = LabelSmoothingLoss(classes=10, smoothing=0.2)
 optimizer = optim.Adam(resnet.parameters(), lr=1e-3)
 ```
-
-
-
-
-
-
-
-
