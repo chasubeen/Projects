@@ -54,7 +54,7 @@
   [⚙️ResNet](https://github.com/chasubeen/Projects/tree/main/FacialExpression/ResNet)    
   [⚙️EfficientNet](https://github.com/chasubeen/Projects/tree/main/FacialExpression/EfficientNet)    
   - 개별 분류 모델에 각각 데이터 셋을 학습
-  - learning rate, batch size 등의 optimizer들을 조정하며 여러 조건들에서 학습 진행
+  - learning rate, batch size,optimizer 등의 parameter들을 조정하며 여러 조건들에서 학습 진행
 - 이후 **앙상블 기법**을 적용하여 여러 분류기를 합쳐 성능 향상
 
 ### **5️⃣ 최종 결과**
