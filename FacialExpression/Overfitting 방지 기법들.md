@@ -1,6 +1,5 @@
 # **0. Reference**
 - [기술블로그_과적합 방지를 통한 모델 성능 개선](https://yeong-jin-data-blog.tistory.com/entry/%ED%8C%8C%EC%9D%B4%ED%86%A0%EC%B9%98-%EC%8A%A4%ED%84%B0%EB%94%94-%EA%B3%BC%EC%A0%81%ED%95%A9-%EB%B0%A9%EC%A7%80%EB%A5%BC-%ED%86%B5%ED%95%9C-%EB%AA%A8%EB%8D%B8-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EB%B0%A9%EB%B2%95)  
-- [교란 라벨링 관련 논문](https://arxiv.org/abs/1605.00055)
 
 # **1. 데이터 증식(Data Augmentation)**
 - 학습에 필요한 추가 데이터 수집이 어려운 경우 기존 데이터를 증식하는 방법
@@ -142,14 +141,19 @@ torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, affine=True, track_r
 ```
 
 # **6. 교란 라벨 (Disturb Label) / 교란 값(Disturb Value)**
+### **6-0. References**
+- [교란 라벨링 구현](https://github.com/amirhfarzaneh/disturblabel-pytorch/blob/master/main.py)
+- [교란 라벨링 관련 논문](https://arxiv.org/abs/1605.00055)
+- [Tensor에서 혼동되는 여러 메서드와 함수](https://subinium.github.io/pytorch-Tensor-Variable/) 
+
+### **6-1. 개념**
 - 분류(classification) 문제에서 일정 비율의 라벨을 의도적으로 **잘못된** 라벨로 만들어서 학습을 방해하는 방식
   - 단순한 방식이지만 과적합을 효과적으로 막을 수 있음
 - 손실층(loss layer)에 규제를 두는 방식
 - 학습 과정에서 교란 라벨을 추가한 후 학습 진행
-- 코드
-  - [Tensor에서 혼동되는 여러 메서드와 함수](https://subinium.github.io/pytorch-Tensor-Variable/)  
+- 코드   
   
-**1. DisturbLabel 객체 정의**  
+**1) DisturbLabel 객체 정의**  
 ```Python
 class DisturbLabel(torch.nn.Module):
     def __init__(self, alpha, num_classes): 
@@ -173,7 +177,7 @@ class DisturbLabel(torch.nn.Module):
         return y_disturbed
 ```
   
-**2. 교란 라벨 추가 & 학습 진행**  
+**2) 교란 라벨 추가 & 학습 진행**  
 ```Python
 disturblabels = DisturbLabel(alpha = 30, num_classes = 10) # 교란 라벨 생성
  
