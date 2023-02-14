@@ -145,6 +145,7 @@ torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, affine=True, track_r
 - 분류(classification) 문제에서 일정 비율의 라벨을 의도적으로 **잘못된** 라벨로 만들어서 학습을 방해하는 방식
   - 단순한 방식이지만 과적합을 효과적으로 막을 수 있음
 - 손실층(loss layer)에 규제를 두는 방식
+- 학습 과정에서 교란 라벨을 추가한 후 학습 진행
 - 코드
   - [Tensor에서 혼동되는 여러 메서드와 함수](https://subinium.github.io/pytorch-Tensor-Variable/)  
   
