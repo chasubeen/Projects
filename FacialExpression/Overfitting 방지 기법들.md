@@ -146,7 +146,8 @@ torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, affine=True, track_r
   - 단순한 방식이지만 과적합을 효과적으로 막을 수 있음
 - 손실층(loss layer)에 규제를 두는 방식
 - 코드
-  - [Tensor에서 혼동되는 여러 메서드와 함수](https://subinium.github.io/pytorch-Tensor-Variable/)
+  - [Tensor에서 혼동되는 여러 메서드와 함수](https://subinium.github.io/pytorch-Tensor-Variable/)  
+  
 **1. DisturbLabel 객체 정의**  
 ```Python
 class DisturbLabel(torch.nn.Module):
