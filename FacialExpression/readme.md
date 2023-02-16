@@ -13,14 +13,14 @@
 
 ### **2️⃣ Data Description**
 - **활용 데이터 셋**
-  - Facial Expression Dataset(https://www.kaggle.com/datasets/aadityasinghal/facial-expression-dataset)
+  - [Facial Expression Dataset](https://www.kaggle.com/datasets/aadityasinghal/facial-expression-dataset)
 - **데이터 살펴보기**
   - train, test dataset으로 이미 분리가 되어있는 상태
     - 각각의 데이터는 다시 7개의 감정(angry, disgust, fear, happy, neutral, sad, surprise)으로 분류되어 있음
-    - disgust의 경우 다른 데이터에 비해 개수가 매우 적음 -> 이에 대한 대책 필요
+    - disgust의 경우 다른 데이터에 비해 개수가 매우 적음 -> **Data Augmentation** 적용, **가중 손실 함수** 활용
   - 각 사진의 크기는 48 * 48 size의 흑백 사진
   - 사진들의 이름이 제각각임 -> 일정한 형식으로 통일하기 위해 전처리 수행
-  - 오분류된 사진, 잘못된 사진(ex. 캐릭터 사진 등) 처리
+  - 오분류된 사진, 잘못된 사진(ex. 캐릭터 사진 등) 전처리
 
 ### **3️⃣ 전처리**
 **1) 데이터 재분배**
