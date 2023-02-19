@@ -21,4 +21,8 @@
   - categorical 변수: One-hot Encoding 적용
   - feature: 로그 변환, RobustScaler 적용
   - target: 로그 변환
+- ver4
+  - categorical 변수: One-hot Encoding 적용
+  - feature: RobustScaler 적용
+  - target: 로그 변환
   
