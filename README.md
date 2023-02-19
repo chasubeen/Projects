@@ -12,6 +12,7 @@
   - 데이콘 교육용 프로젝트
   - 주제: 보스턴 데이터로부터 보스턴의 집값을 예측하는 AI 알고리즘 개발
   - 예측 문제, 회귀 문제, 평가 지표(MSE)  
+  
   ※ 아카이빙이 잘못되어 혼자 다른 레포에 속해있는 상태입니다.
   
 - [🎡 데이콘 Basic 풍력 발전량 예측 AI 경진대회](https://github.com/chasubeen/Projects/tree/main/dacon/contest/basic/wind)
