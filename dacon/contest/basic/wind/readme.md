@@ -29,3 +29,7 @@
   - categorical 변수: LabelEncoding 적용
   - feature: 로그 변환, StandardScaler 적용
   - target: 로그 변환
+- ver6
+  - categorical 변수: LabelEncoding,One-hot Encoding 적용
+  - feature: StandardScaler 적용
+  - target: 로그 변환
