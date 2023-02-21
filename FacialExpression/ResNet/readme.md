@@ -86,22 +86,46 @@ early_stopping = EarlyStopping(patience = 20, verbose = False) # 조기 종료(�
 |**min_lr**|1e-13|1e-14|1e-15|
 |**Best Acc**|0.6442|**0.6626**|0.5712|
 
-✅ **Case 4**
-- Case 4에서 **손실 함수 & 활성화 함수** 튜닝
-- batch size: 128
+### **✅ Case 4**
+- 목표: 적절한 **batch size** 찾기
+  - 각각의 경우에 대해 batch size와 learning rate만을 조정
+  - 나머지 조건은 **Case 3**과 동일 
+
+|   |**adam_ver4**|**adam_ver5**|**adam_ver6**|**adam_ver7**|
+|------|-------|-------|-------|-------|
+|**batch**|128|128|256|256|
+|**초기 lr**|1e-3|1e-4|1e-2|1e-3|
+|**min_lr**|1e-13|1e-14|1e-12|1e-13|
+|**Best Acc**|0.6521|0.6531|0.5909|**0.6654**|
+
+### **✅ Case 5**
+- 목표: **L2 정규화(L2 규제)** 적용
+  - 규제(Regularization): 학습이 과대적합되는 것을 방지하고자 일종의 penalty를 부여하는 것
+  - 각 가중치 제곱의 합에 규제 강도를 곱한 값($Error = MSE + α𝑤^2$)
+  - 원형의 경계를 만들어서 학습 데이터셋의 최적 지점인 w* 에 도달하지 못하게 하고 경계 내부의 v* 까지만 도달할 수 있도록 하는 방식
+  - Optimizer로 Adam을 사용할 경우 **weight_decay** 파라미터를 추가할 수 있음
+    - 값이 클수록 규제 강도가 강한 것을 의미 -> 가중치가 더 많이 감소됨
+  ```Python
+  optimizer = optim.Adam(model.parameters(), lr = 1e-3, weight_decay = 1e-3)
+  ```
+- batch size: 128, 256
+- Epoch: 100
+- 손실함수: CrossEntropyLoss
 - learning rate
-  - 초기: 1e-5
-  - lr_scheduler, early stopping 적용(min_lr: 1e-12)
-- Epoch: 200 
+  - 각각의 batch size에 대해 성능이 가장 **좋았던** 모델들의 learning rate 활용
+  - batch = 128: 초기(1e-4), min_lr(1e-14)
+  - batch = 256: 초기(1e-3), min_lr(1e-13)
 
-|   |**adam_ver7**|**adam_ver8**|
-|------|-------|-------|
-|**손실 함수**|**가중** CrossEntropyLoss|**가중** CrossEntropyLoss|
-|**활성화 함수**|softmax|**log** softmax|
-|**Best Acc**|0.6238|**0.6444**|
+|   |**adam_ver8**|**adam_ver9**|**adam_ver10**|**adam_ver11**|
+|------|-------|-------|-------|-------|
+|**batch**|128|128|256|256|
+|**초기 lr**|1e-4|1e-4|1e-3|1e-3|
+|**min_lr**|1e-14|1e-14|1e-13|1e-13|
+|**L2 규제 강도**|1e-4|1e-3|1e-4|1e-3|
+|**Best Accuracy**|0.6571|**0.6658**|0.6653|0.6525|
+---
 
-
-### **#️⃣ Reference**
+## **#️⃣ References**
 - [VGG19 관련 논문(Very Deep Convolutional)](https://arxiv.org/abs/1409.1556)  
 - [Learning rate & batch size best 조합 찾기(기술 블로그)](https://inhovation97.tistory.com/32)  
 - [learning rate& batch size 관련 논문](https://www.sciencedirect.com/science/article/pii/S2405959519303455#fig2)  
