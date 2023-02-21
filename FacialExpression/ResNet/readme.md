@@ -29,20 +29,13 @@
 ## **2️⃣ 성능 최적화 결과**
 ### **✅ Case 1**
 - Optimizer: SGD(Stochastic Gradient Descent/ 확률적 경사 하강법)
-```Python
-optimizer = torch.optim.SGD(model.parameters(), lr = 1e-2, momentum = 0.9)
-```
 - batch size: 64
 - Epoch: 100
 - 손실함수: CrossEntropyLoss
 
 - 목표: 적절한 **learning rate** 찾기
   - lr_scheduler, early stopping 적용
-```Python
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode = 'min', patience = 3, factor = 0.1, 
-                                                       min_lr = min_lr,verbose = True)  # lr scheduling
-early_stopping = EarlyStopping(patience = 20, verbose = False) # 조기 종료(사용자 정의 모듈)
-```
+
 |   |**sgd_ver1**|**sgd_ver2**|**sgd_ver3**|
 |------|-------|-------|-------|
 |**초기 learning rate**|1e-2|1e-3|1e-4|
