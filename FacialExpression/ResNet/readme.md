@@ -1,7 +1,7 @@
-# **ResNet 모델링 결과**
+# **ResNet50 모델링 결과**
 
 ## **1️⃣Baseline**  
-### **- ResNet50?**  
+### **- ResNet?**  
 - 일반적으로는 신경망의 깊이가 깊어질수록 딥러닝 성능이 좋아짐
   - [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385) 논문에 의하면 신경망은 깊이가 깊어질수록 성능이 좋아지다가 일정한 단계에 다다르면 오히려 성능이 나빠진다고 함
 - 깊어진 신경망을 효과적으로 학습하기 위한 방법으로 **레지듀얼(residual, 잔차)** 개념 도입
@@ -35,7 +35,8 @@ optimizer = torch.optim.SGD(model.parameters(), lr = 1e-2, momentum = 0.9)
 - batch size: 64
 - Epoch: 100
 - 손실함수: CrossEntropyLoss
-- **learning rate** 조정
+
+- 목표: 적절한 **learning rate** 찾기
   - lr_scheduler, early stopping 적용
 ```Python
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode = 'min', patience = 3, factor = 0.1, 
@@ -45,12 +46,11 @@ early_stopping = EarlyStopping(patience = 20, verbose = False) # 조기 종료(�
 |   |**sgd_ver1**|**sgd_ver2**|**sgd_ver3**|
 |------|-------|-------|-------|
 |**초기 learning rate**|1e-2|1e-3|1e-4|
-|**min_lr**|1e-10|1e-12|1e-13|
-|**Best Acc**|**0.6587**|0.6285|0.5710|
+|**min_lr**|1e-10|1e-12|1e-12|
+|**Best Acc**|**0.6639**|0.6420|0.5601|
 
-
-✅ **Case 2**
-- Case 1에서 **batch size**만 변경(64 -> 128)
+### **✅ Case 2**
+- 목표: 적절한 **batch size** 찾기
 - batch size가 **클** 때
   - 한 번 학습할 때 많은 데이터로 학습
   - 빠른 학습/수렴 속도 -> local optima에 빠질 확률이 작음
@@ -60,50 +60,33 @@ early_stopping = EarlyStopping(patience = 20, verbose = False) # 조기 종료(�
   - 작은 데이터로 학습 -> loss의 분산이 커서 정규화 효과가 있음, 조금 더 다양하고 예리하게 학습할 수 있음
   - 긴 학습시간, 많은 step 수로 인해 local minima에 빠질 위험성 증가
 
-|   |**sgd_ver4**|**sgd_ver5**|**sgd_ver6**|
-|------|-------|-------|-------|
-|**손실 함수**|CrossEntropyLoss|**가중** CrossEntropyLoss|**가중** CrossEntropyLoss|
-|**활성화 함수**|softmax|softmax|**log** softmax|
-|**Best Acc**|0.6427|**0.6622**|0.6606|
+- 일반적으로 learning rate와 batch size는 **양의 상관관계**를 보임 -> 동시 조정이 요구됨
+  - 각각의 경우에 대해 batch size와 learning rate만을 조정/ 나머지 조건은 **Case 1**과 동일
+
+|   |**sgd_ver4**|**sgd_ver5**|**sgd_ver6**|**sgd_ver7**|
+|------|-------|-------|-------|-------|
+|**batch**|128|128|256|256|
+|**초기 lr**|1e-2|1e-3|1e-1|1e-2|
+|**min_lr**|1e-10|1e-12|1e-10|1e-12|
+|**Best Acc**|0.6642|0.6104|0.6183|**0.6628**|
 
 - - -
 
-✅ **Case 3**
+### **✅ Case 3**
 - Optimizer 변경(SGD -> **Adam**)
-- 실패한 모델들 
-  - 손실함수: CrossEntropyLoss
-  - 활성화 함수: softmax
-  - lr_scheduler, early stopping 적용
- 
-|   |**adam_ver1**|**adam_ver2**|**adam_ver4**|
+- batch size: 64
+- Epoch: 100
+- 손실함수: CrossEntropyLoss
+
+- 목표: 적절한 **learning rate** 찾기
+
+|   |**adam_ver1**|**adam_ver2**|**adam_ver3**|
 |------|-------|-------|-------|
-|**batch**|64|128|64|
-|**초기 lr**|0.0005|0.001|0.0001|
-|**min_lr**|1e-7|1e-8|1e-10|
-|**Epoch**|100|200|200|
-|**Best Acc**|0.24xx(중단)|(중단)|(중단)|
-
-- 실패 원인 분석: batch size와 learning rate의 관계
-<img src = "https://user-images.githubusercontent.com/98953721/209615216-0c5679ab-11db-438d-846d-06bc2f2d6a98.png" width = 300 height = 300>
-
--> 일반적으로 learning rate와 batch size는 **양의 상관관계**를 보인다.  
--> learning rate를 **줄인** 후 다시 모델링 진행  
+|**초기 learning rate**|1e-3|1e-4|1e-5|
+|**min_lr**|1e-13|1e-14|1e-15|
+|**Best Acc**|0.6442|**0.6626**|0.5712|
 
 ✅ **Case 4**
-- Case 3에서 **learning rate & batch size** 튜닝 -> 적절한 조합 탐색
-- 손실함수: CrossEntropyLoss
-- 활성화 함수: softmax
-- lr_scheduler, early stopping 적용
-- Epoch: 200
-
-|   |**adam_ver3**|**adam_ver5**|**adam_ver6**|
-|------|-------|-------|-------|
-|**batch**|128|128|64|
-|**초기 lr**|1e-4|1e-5|1e-5|
-|**min_lr**|1e-10|1e-12|1e-12|
-|**Best Acc**|0.6137|**0.6344**|0.6249|
-
-✅ **Case 5**
 - Case 4에서 **손실 함수 & 활성화 함수** 튜닝
 - batch size: 128
 - learning rate
