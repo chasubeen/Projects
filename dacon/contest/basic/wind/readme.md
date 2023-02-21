@@ -7,7 +7,10 @@
   - skew() 함수를 이용해 칼럼의 데이터 세트의 왜곡된 정도 추출
   - 반환값이 1 이상인 경우 왜곡 정도가 높다고 판단
   - skew() 함수 적용 시 One-hot Encoding된 변수는 피해야 한다.
-- 이상치(Outlier)
+- 이상치(Outlier) 처리 -> target 변수와 상관관계가 높은 feature에 대해서만 이상치 제거
+  - 참고자료
+    - 파이썬 머신러닝 완벽가이드(4-9. 분류 실습_캐글 신용카드 사기 검출)
+    - [기술블로그](https://whitewing4139.tistory.com/178)
 - feature 변수들 간의 다중공선성(multicollinearity)
   - 참고자료: 회귀분석 강의록, [기술블로그](https://ysyblog.tistory.com/171)
   
