@@ -122,7 +122,30 @@ early_stopping = EarlyStopping(patience = 20, verbose = False) # 조기 종료(�
 |**초기 lr**|1e-4|1e-4|1e-3|1e-3|
 |**min_lr**|1e-14|1e-14|1e-13|1e-13|
 |**L2 규제 강도**|1e-4|1e-3|1e-4|1e-3|
-|**Best Accuracy**|0.6571|**0.6658**|0.6653|0.6525|
+|**Best Acc**|0.6571|**0.6658**|0.6653|0.6525|
+
+## **✅ Case 6**
+- 목표: **교란 라벨링** 적용
+  - 분류(classification) 문제에서 일정 비율의 라벨을 의도적으로 잘못된 라벨로 만들어서 학습을 방해하는 방식
+    - 단순한 방식이지만 과적합을 효과적으로 막을 수 있음
+  - 손실층(loss layer)에 규제를 두는 방식
+    - 학습 과정에서 교란 라벨을 추가한 후 학습 진행
+- 이전의 모델들 중 성능이 가장 좋았던 모델 구조로 모델링
+  - Optimizer: Adam
+  - batch size: 128
+  - Epoch: 100
+  - learning rate
+    - 초기: 1e-4
+    - min_lr: 1e-14
+  - 손실함수: CrossEntropyLoss
+  - weight_decay: 1e-3
+
+|   |**adam_ver12**|**adam_ver13**|**adam_ver14**|
+|------|-------|-------|-------|
+|**alpha(교란 %)**|10|15|20|
+|**Best Acc**|**0.6177**|0.5902|0.5610|
+
+- 오히려 성능이 저하되었음
 ---
 
 ## **#️⃣ References**
