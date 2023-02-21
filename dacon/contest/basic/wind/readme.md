@@ -10,7 +10,7 @@
 - 이상치(Outlier) 처리 -> target 변수와 상관관계가 높은 feature에 대해서만 이상치 제거
   - 참고자료
     - 파이썬 머신러닝 완벽가이드(4-9. 분류 실습_캐글 신용카드 사기 검출)
-    - [기술블로그](https://lifelong-education-dr-kim.tistory.com/entry/python-pandas-series-type%EC%97%90%EC%84%9C-%EC%9D%B4%EC%83%81%EC%B9%98-outlier-%EC%A0%9C%EA%B1%B0-%ED%95%98%EA%B8%B0)
+    - [기술블로그](https://hungryap.tistory.com/69)
 - feature 변수들 간의 다중공선성(multicollinearity)
   - 참고자료: 회귀분석 강의록, [기술블로그](https://ysyblog.tistory.com/171)
   
