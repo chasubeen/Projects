@@ -5,8 +5,12 @@
 - 범주형(categorical) feature의 경우 One-hot Encoding으로 피처를 인코딩
 - feature 데이터의 데이터 분포
   - skew() 함수를 이용해 칼럼의 데이터 세트의 왜곡된 정도 추출
-  - 반환값이 1 잇항인 경우 왜곡 정도가 높다고 판단
+  - 반환값이 1 이상인 경우 왜곡 정도가 높다고 판단
   - skew() 함수 적용 시 One-hot Encoding된 변수는 피해야 한다.
+- 이상치(Outlier)
+- feature 변수들 간의 다중공선성(multicollinearity)
+  - 참고자료: 회귀분석 강의록, [기술블로그](https://ysyblog.tistory.com/171)
+  
 
 # **Version**
 - ver1
