@@ -41,11 +41,35 @@
 ### **이상치 제거 작업 진행**
 
 - ver6
+  - 상관도가 높은 feature의 이상치만 제거
   - categorical 변수: LabelEncoding,One-hot Encoding 적용
   - feature: StandardScaler 적용
   - target: 로그 변환
 
+### **회귀 트리 적용**
 - ver7
+  - 모든 feature의 이상치 제거
   - categorical 변수: LabelEncoding,One-hot Encoding 적용
   - feature: 로그 변환, StandardScaler 적용
+  - target: 로그 변환 
+
+---
+**여기서부터 해봐야 함**  
+- ver8
+  - 상관도가 높은 feature의 이상치만 제거
+  - categorical 변수: LabelEncoding,One-hot Encoding 적용
+  - feature: 로그 변환, StandardScaler 적용
+  - target: 로그 변환 
+  
+- ver9
+  - 상관도가 높은 feature의 이상치만 제거
+  - categorical 변수: LabelEncoding,One-hot Encoding 적용
+  - feature: StandardScaler 적용
+  - target: 로그 변환 
+  
+- ver10
+  - snowing 컬럼 제거
+  - 상관도가 높은 feature의 이상치만 제거
+  - categorical 변수: LabelEncoding,One-hot Encoding 적용
+  - feature: StandardScaler 적용
   - target: 로그 변환 
