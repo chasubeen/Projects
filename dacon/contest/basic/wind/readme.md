@@ -47,5 +47,5 @@
 
 - ver7
   - categorical 변수: LabelEncoding,One-hot Encoding 적용
-  - feature: 로그 변환, MinMaxScaler 적용
+  - feature: 로그 변환, StandardScaler 적용
   - target: 로그 변환 
