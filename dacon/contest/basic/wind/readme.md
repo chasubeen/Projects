@@ -68,7 +68,7 @@
   - target: 로그 변환 
   
 - ver10
-  - snowing 컬럼 제거
+  - 왜곡 정도가 높은 pressure 컬럼 제거(상관계수: 0.0)
   - 상관도가 높은 feature의 이상치만 제거
   - categorical 변수: LabelEncoding,One-hot Encoding 적용
   - feature: StandardScaler 적용
