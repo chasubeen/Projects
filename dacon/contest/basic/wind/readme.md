@@ -135,9 +135,16 @@ seed_everything(42) # Seed 고정
       - 로그 변환(Log Transformation): 좌로 치우쳐진(Positive skew, Left skew) 데이터에 활용 가능
       - 제곱(Square): 우로 치우쳐진(Negative skew, Right skew) 데이터에 활용 가능
          
-
 # **3. 평가 지표**
-
+- **MAE(Mean Absolute Error)**  
+  - 예측값과 실제값의 차이에 대한 절대값에 대하여 평균을 낸 값
+  - $(\frac{1}{n})\sum_{i=1}^{n}\left | y_{i} - x_{i} \right |$ 
+  - 작을수록 좋다.
+  ```Python
+  from sklearn.metrics import mean_absolute_error
+  
+  mae = mean_absolute_error(pred, actual)
+  ```
 # **4. 회귀 모형(Regression Model)**
 
 # **5. 결과 정리**
