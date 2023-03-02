@@ -58,6 +58,7 @@ seed_everything(42) # Seed 고정
 - ```sns.countplot(x = df[columns])```를 통해 질적 변수들의 빈도 시각화
 - ```sns.boxpllot(y = df[columns])```를 통해 이상치 탐지(상자 수염 그림)
 - ```sns.heatmap(df.corr())```를 통해 변수들 간의 상관계수 시각화
+- ```scipy.stats.skew()```를 통해 데이터의 왜곡 정도 
 
 ### **2-4. 데이터 전처리 기법들**
 **1️⃣ 범주형 변수 전처리**  
@@ -118,7 +119,22 @@ seed_everything(42) # Seed 고정
     ```
     
 **2️⃣ 이상치/ 데이터 분포에 대한 전처리**  
-  - ㅓㅏㅣㅓㅣㅏㅓ
+  - **피처 스케일링(Feature Scaling)**  
+    - 서로 다른 변수의 값 범위를 일정한 수준으로 맞추는 작업
+    - 종류
+      - 표준화(StandardScaler): 개별 피처를 평균이 0이고, 분산이 1인 값으로 변환
+      - 정규화(MinMaxScaler): 데이터 값을 0과 1 사이의 범위 값으로 변환
+      - 표준정규화(RobustScaler)
+    - 주의: 학습 데이터로 fit()이 적용된 스케일링 기준 정보를 그대로 테스트 데이터에 적용해야 함
+      - 가능하다면 전체 데이터의 스케일링 변환 후 train, test 데이터 분리
+      - 또는 train data에 대해서는 ```fit_transform()```, test data에 대해서는 ```transform()```  
+     
+  - **데이터 변환(Data Transformation)**  
+    - 데이터가 **왜곡된** 분포를 가지는 경우 데이터 변환을 통해 왜곡 정도를 완화할 수 있음
+    - 종류
+      - 로그 변환(Log Transformation): 좌로 치우쳐진(Positive skew, Left skew) 데이터에 활용 가능
+      - 제곱(Square): 우로 치우쳐진(Negative skew, Right skew) 데이터에 활용 가능
+         
 
 # **3. 평가 지표**
 
