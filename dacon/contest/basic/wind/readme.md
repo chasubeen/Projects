@@ -146,5 +146,138 @@ seed_everything(42) # Seed 고정
   mae = mean_absolute_error(pred, actual)
   ```
 # **4. 회귀 모형(Regression Model)**
+### **4-0. 회귀 분석 모델링**
+- 단순 선형 회귀(LinearRegression)
+- 규제 선형 회귀
+  - 릿지(Ridge)
+  - 라쏘(Lasso)
+  - 엘라스틱넷(ElasticNet): 릿지 + 라쏘
+- 회귀 트리
+  - 결정 트리
+  - 랜덤 포레스트
+  - GBM
+  - XGBoost
+  - LightGBM
+- 스태킹 모델
+- AutoML
+
+### **4-1. 선형 회귀(LinearRegression)**
+- 실제값과 예측값의 RSS(Residual Sum of Squares)를 최소화 해 OLS(Ordinary Least Squares) 추정 방식으로 구현
+- 규제를 적용하지 않은 모델
+- 코드
+```Python
+from sklearn.linear_model import linearRegression
+
+model = LinearRegression(n_jobs = -1) # CPU Core를 있는 대로 모두 사용하겠다.
+model.fit(X_train, y_train) # 학습
+pred = model.predict(X_test) # 예측
+mean_absolute_error(pred, y_test) # 평가
+```
+
+### **4-2. 규제(Regularization)**
+- 학습이 과적합되는 것을 방지하고자 일종의 penalty를 부여하는 것
+
+#### **1) L1 규제**  
+- 가중치의 합을 더한 값에 규제 강도를 곱하여 오차에 더한 값($Error=MAE+α|w|$)
+- 어떤 가중치는 실제로 0이 됨 -> 모델에서 완전히 제외되는 특성이 발생할 수 있음
+- **라쏘(Lasso)** 모델에 적용됨
+- 코드
+```Python
+from sklearn.linear_model import Lasso
+
+model = Lasso(alpha = alpha) # alpha: 규제 강도
+model.fit(X_train, y_train) # 학습
+pred = model.predict(X_test) # 예측
+mean_absolute_error(pred, y_test) # 평가
+```
+
+#### **2) L2 규제**  
+- 각 가중치 제곱의 합에 규제 강도를 곱한 값($Error=MAE+αw^2$)
+- 규제 강도를 크게 하면 가중치가 더 많이 감소되고(규제를 중요시함), 규제 강도를 작게 하면 가중치가 증가함(규제를 중요시하지 않음)
+- **릿지(Ridge)** 모델에 적용됨
+- 코드
+```Python
+from sklearn.linear_model import Ridge
+
+model = Ridge(alpha = alpha) # 규제 강도
+model.fit(X_train, y_train) # 학습
+pred = model.predict(X_test) # 예측
+mean_squared_error(pred, y_test) # 평가
+```
+
+#### **3) 엘라스틱넷(ElasticNet)**
+- L1 규제 + L2 규제
+- l1_ratio(default: 0.5) 속성 -> 규제 강도 조정
+  - l1_ratio = 0: L2 규제만
+  - l1_ratio = 1: L1 규제만
+  - 0 < l1_ratio < 1: L1 and L2 규제(혼합 사용)
+- 코드
+```Python
+from sklearn.linear_model import ElasticNet
+
+model = ElasticNet(alpha = alpha,l1_ratio = l1_ratio) # 규제 강도
+model.fit(X_train, y_train) # 학습
+pred = model.predict(X_test) # 예측
+mean_absolute_error(pred, y_test) # 평가
+```
+
+### **4-3. 다항 회귀**
+- 다항식의 계수 간 상호작용을 통해 새로운 feature를 생성
+- 데이터가 단순한 직선의 형태가 아닌 비선형 형태여도 선형 모델을 사용하여 비선형 데이터를 학습할 수 있음
+  - 원본 데이터: 선형 관계가 x
+  - 새로운 feature: 선형 관계
+- 특성의 거듭제곱을 새로운 특성으로 추가하고 확장된 특성을 포함한 데이터 셋에 선형 모델을 학습
+- 코드
+```Python
+from sklearn.preprocessing import PolynomialFeatures
+
+poly = PolyNomialFeatures(degree = 2, include_bias = False)
+# degree: 차수(몇 제곱까지 갈 것인가)
+# include_bias: 절편 포함 여부 선택
+```
+
+#### **파이프라인(PipeLine)**
+- 여러 가지 방법들을 융합하는 기법
+- 코드
+```Python
+from sklearn.pipeline import make_pipeline
+
+# 파이프라인 생성(모델 객체 생성)
+pipeline = make_pipeline(
+  StandarsScaler(),
+  ElasticNet(alpha = 0.1, l1_ratio = 0.2)
+)
+
+pipeline_pred = pipeline.fit(X_train, y_train).predict(X_test) # 학습, 예측
+mean_squared_error(pipeline_pred,y_test) # 평가
+```
+
+### **4-4. 회귀 트리**
+- 회귀 함수를 기반으로 하지 않고 결정 트리와 같이 **트리**를 기반으로 하는 회귀 방식
+  -  회귀를 위한 트리를 생성하고 이를 기반으로 회귀 예측을 하는 것
+  -  리프 노드에 속한 데이터 값의 평균값을 구해 회귀 예측값을 계산
+- sklearn에서는 결정 트리, 랜덤 포레스트, GBM에서 회귀 수행을 할 수 있는 Estimator 클래스 제공
+  - XGBoost, LightGBM도 사이킷런 래퍼 클래스를 통해 제공됨
+- 코드
+```Python
+### 모델 객체 생성
+dt_reg = DecisionTreeRegressor(random_state = 0, max_depth = 4)
+rf_reg = RandomForestRegressor(n_estimators = 100)
+gbm_reg = GradientBoostingRegressor(n_estimators = 100)
+xgb_reg = XGBRegressor(n_estimators = 100)
+lgbm_reg = LGBMRegressor(n_estimators = 100)
+
+
+### 학습/예측/평가
+models = [rf_reg,gbm_reg,xgb_reg,lgbm_reg]
+names = ['RandomForest', 'GradientBoosting', 'XGB','LGBM']
+for i in range(len(models)):
+    model = models[i]
+    model.fit(X_train.values,y_train.values) # 학습
+    pred = np.expm1(model.predict(X_valid.values)) # 예측
+    mae_eval('{}'.format(names[i]),pred,y_valid) # 평가 & 시각화
+```
+- ```feature_importances_``` 속성을 통해 피처별 중요도를 파악할 수 있음
+- 선형 회귀가 직선으로 예측 회귀선을 표현하는 데 반해, 회귀 트리의 경우 분할되는 데이터 지점에 따라 브랜치를 만들면서 **계단 형태**로 회귀선을 생성
 
 # **5. 결과 정리**
