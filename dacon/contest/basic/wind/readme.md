@@ -366,8 +366,29 @@ mae = mean_absolute_error(y_valid,final)
 print("스태킹 회귀 모델의 최종 성능은: ", mae)
 ```
 
-### **4-7. AutoML**
-- PyCaret 관련 정리..
+### **4-7. AutoML(Automated Machine Learning)**
+- 현재의 머신러닝 모델링은 Machine Learning Process 동안 많은 시간과 노력을 요구
+  - Machine Learning Process: 문제 정의 과정, 데이터 수집, 전처리, 모델 학습 및 평가, 서비스 적용 
+- AutoML은 기계 학습 파이프라인에서 수작업과 반복되는 작업을 자동화하는 프로세스
+  - 머신러닝을 자동화하는 AI 기술
+- AutoML systems
+  - AutoWEKA
+  - Auto-sklearn
+  - Auto-Pytorch
+
+#### **▶ PyCaret**
+- [PyCaret API](https://pycaret.readthedocs.io/en/latest/index.html)
+- AutoML 구현을 가능하게 해주는 파이썬 라이브러리
+- 적은 코드로 머신 러닝을 구현할 수 있음 => Low-code machine learning
+- scikit-learn 패키지 기반
+- 분류/회귀/군집화 등 다양한 모델 지원
+- 단계
+  - 각 반복마다
+    - setup
+    - model 비교
+    - 다양한 방법으로 모델 생성/저장
+    - 모델 혼합
+    - 모델 stacking  
 
 # **5. 결과 정리**
 - 범주형 변수의 경우 인코딩 진행(LabelEncoding, One-hot Encoding)
