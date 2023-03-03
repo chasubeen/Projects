@@ -371,14 +371,101 @@ print("스태킹 회귀 모델의 최종 성능은: ", mae)
 
 # **5. 결과 정리**
 - 범주형 변수의 경우 인코딩 진행(LabelEncoding, One-hot Encoding)
+- target 변수의 경우 데이터 왜곡 정도가 심함 => 모두 로그 변환 수행
 
 ### **✅ Case 1**
-- 여러 encoding 방법 적용
 - 피처 데이터에 대한 처리
   - 피처 스케일링
   - 데이터 변환(로그 변환)
   
-| |ver1|ver2|ver3|ver4|ver5|
-|-----|-----|-----|-----|-----|
+| |ver 1|ver 2|ver 3|
+|-------|-------|-------|-------|
+|**범주형 변수**|LabelEncoding|LabelEncoding|LabelEncoding|
+|**피처 변환**|로그 변환|변환 x|로그 변환|
+|**피처 스케일링**|RobustScaler|RobustScaler|StandardScaler|
+|**최종 선택 모델**|Poly LinearRegression|Poly ElasticNet|Poly ElasticNet|
+|**MAE**|2.3460|2.3417|2.3271|
 
+### **✅ Case 2**
+- 범주형 변수의 인코딩 방식을 Label Encoding에서 One-hot Encoding으로 변경
+  - 선형 회귀 등의 ML 알고리즘에서는 숫자 값의 크고 작음이 하나의 특성으로 작용할 위험성 존재
+  
+| |ver 4|ver 5|
+|-------|-------|-------|
+|**범주형 변수**|One-hot Encoding|One-hot Encoding|
+|**피처 변환**|로그 변환|변환 x|
+|**피처 스케일링**|RobustScaler|RobustScaler|
+|**최종 선택 모델**|Poly LinearRegression|Poly ElasticNet|
+|**MAE**|0.3867|2.3361|
 
+### **✅ Case 3**
+- 상관도가 높은 feature의 이상치 제거
+
+| |ver 6|
+|-------|-------|
+|**범주형 변수**|One-hot Encoding|
+|**피처 변환**|변환 x|
+|**피처 스케일링**|StandardScaler|
+|**최종 선택 모델**|Poly ElasticNet|
+|**MAE**|2.2805|
+
+### **✅ Case 4**
+- 회귀 트리 적용
+
+- 범주형 변수: One-hot Encoding 진행
+- 이상치 제거
+- 피처 스케일링의 경우 모두 StandardScaler 적용
+- target 데이터의 경우 모두 로그 변환 적용
+- 최종 회귀 모형 선택 시 성능이 좋은 두 개의 모델을 선택하여 혼합 모델 생성
+
+| |ver 7|ver 8|ver 9|
+|-------|-------|-------|-------|
+|**이상치 처리**|모든 feature|상관도가 높은 feature|상관도가 높은 feature|
+|**피처 변환**|로그 변환|로그 변환|변환 x|
+|**최종 선택 모델**|Poly RandomForest + Poly LGBM|RandomForest + Poly LGBM|RandomForest + LGBM|
+|**MAE**|1.9692|2.0590|2.0777|
+
+### **✅ Case 5**
+- 컬럼 제거
+  - 왜곡 정도가 높은 컬럼 중 target 변수와 상관도가 낮은 컬럼 제거
+- 상관도가 높은 feature의 이상치 제거
+- 피처 데이터의 경우 왜곡 정도가 심하면 로그 변환 수행
+- target 데이터의 경우 로그 변환 수행
+
+| |ver 10|ver 11|ver 12|
+|-------|-------|-------|-------|
+|**제외 컬럼**|pressure|pressure, snowing|pressure, snowing|
+|**피처 스케일링**|StandardScaler|Standard|RobustScaler|
+|**최종 선택 모델**|RandomForest|RandomForest|Poly RandomForest + Poly LGBM|
+|**MAE**|2.1720|0.3643|0.3633|
+
+### **✅ Case 6**
+- 스태킹 앙상블 적용
+
+- 컬럼 제거
+  - 왜곡 정도가 높은 컬럼 중 target 변수와 상관도가 낮은 컬럼 제거
+- 상관도가 높은 feature의 이상치 제거
+- 피처 데이터의 경우 왜곡 정도가 심하면 로그 변환 수행
+- target 데이터의 경우 로그 변환 수행
+
+| |ver 13|
+|-------|-------|
+|**제외 컬럼**|pressure, snowing|
+|**피처 스케일링**|StandardScaler|
+|**MAE**|0.3741|
+
+### **✅ Case 7**
+- AutoML 적용
+  - PyCaret 적용
+ - 컬럼 제거
+  - 왜곡 정도가 높은 컬럼 중 target 변수와 상관도가 낮은 컬럼 제거
+- 상관도가 높은 feature의 이상치 제거
+- 피처 데이터의 경우 왜곡 정도가 심하면 로그 변환 수행
+- target 데이터의 경우 로그 변환 수행
+
+| |ver 14|
+|-------|-------|
+|**제외 컬럼**|pressure, snowing|
+|**피처 스케일링**|StandardScaler|
+|**최종 선택 모델**|ExtraTreesRegressor|
+|**MAE**|2.1058|
