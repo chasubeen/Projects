@@ -377,7 +377,6 @@ print("스태킹 회귀 모델의 최종 성능은: ", mae)
   - Auto-Pytorch
 
 #### **▶ PyCaret**
-- [PyCaret API](https://pycaret.readthedocs.io/en/latest/index.html)
 - AutoML 구현을 가능하게 해주는 파이썬 라이브러리
 - 적은 코드로 머신 러닝을 구현할 수 있음 => Low-code machine learning
 - scikit-learn 패키지 기반
@@ -389,6 +388,7 @@ print("스태킹 회귀 모델의 최종 성능은: ", mae)
     - 다양한 방법으로 모델 생성/저장
     - 모델 혼합
     - 모델 stacking  
+- [PyCaret API](https://pycaret.readthedocs.io/en/latest/index.html)
 
 # **5. 결과 정리**
 - 범주형 변수의 경우 인코딩 진행(LabelEncoding, One-hot Encoding)
